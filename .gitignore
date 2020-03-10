@@ -1,0 +1,14 @@
+# Visual Studio Code
+.vscode/
+
+# Virtual environments
+.venv/
+
+# Python
+__pycache__/
+
+# Logs
+*.log
+
+# Test browser persistant store
+browser-store/
