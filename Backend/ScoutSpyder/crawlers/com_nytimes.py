@@ -27,7 +27,7 @@ class NewYorkTimesCrawler(BaseCrawler):
             if article is not None:
                 figures = article.findall('.//figure')
                 for figure in figures:
-                    article.remove(figure)
+                    figure.getparent().remove(figure)
                 article_content = article.findall('.//div[class="article-paragraph"]')
                 article_content = [content.text.strip() for content in article_content if content.text.strip()]
                 article_content = '\n\n'.join(article_content)

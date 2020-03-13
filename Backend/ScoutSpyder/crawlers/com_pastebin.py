@@ -1,6 +1,7 @@
 from ScoutSpyder.crawlers.base_crawler import *
 from ScoutSpyder.utils.logging import *
 from urllib.parse import urlparse
+import re
 
 LOGGER = initialise_logging(__name__)
 
