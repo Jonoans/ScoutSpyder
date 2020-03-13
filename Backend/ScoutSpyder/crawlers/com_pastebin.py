@@ -1,5 +1,6 @@
 from ScoutSpyder.crawlers.base_crawler import *
 from ScoutSpyder.utils.logging import *
+from urllib.parse import urlparse
 
 LOGGER = initialise_logging(__name__)
 
@@ -18,7 +19,16 @@ class PastebinCrawler(BaseCrawler):
         ]
     
     def extract_content(self):
-        paste_code = self.soup.find('textarea', {'id': 'paste_code'})
-        if paste_code:
+        forbidden_paths = [
+            '/dl/.*',
+            '/raw/.*'
+        ]
+        url_path = urlparse(self.url).path
+        for path in forbidden_paths:
+            if re.fullmatch(path, url_path):
+                return
+
+        paste_code = self.parsed_lxml.find('.//textarea[@id="paste_code"]')
+        if paste_code is not None:
             self.text = paste_code.text
             self.has_content = True

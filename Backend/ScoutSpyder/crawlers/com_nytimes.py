@@ -23,13 +23,13 @@ class NewYorkTimesCrawler(BaseCrawler):
     def extract_content(self):
         # Override for chinese support
         if tldextract.extract(self.url).subdomain == 'cn':
-            article = self.soup.find('section', {'class': 'article-body'})
-            if article:
-                figures = article.find_all('figure')
+            article = self.parsed_lxml.find('.//section[@class="article-body"]')
+            if article is not None:
+                figures = article.findall('.//figure')
                 for figure in figures:
-                    figure.decompose()
-                article_content = article.find_all('div', {'class': 'article-paragraph'})
-                article_content = [content.text for content in article_content if content.text.strip()]
+                    article.remove(figure)
+                article_content = article.findall('.//div[class="article-paragraph"]')
+                article_content = [content.text.strip() for content in article_content if content.text.strip()]
                 article_content = '\n\n'.join(article_content)
                 if not len(article_content) <= 50: # Length enforcement
                     self.text = article_content

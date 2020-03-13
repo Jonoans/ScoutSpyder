@@ -1,10 +1,9 @@
 aniso8601==8.0.0
 attrs==19.3.0
 beautifulsoup4==4.8.2
-bs4==0.0.1
 certifi==2019.11.28
 chardet==3.0.4
-Click==7.0
+click==7.1.1
 cssselect==1.1.0
 feedfinder2==0.0.4
 feedparser==5.2.1
@@ -40,4 +39,4 @@ tldextract==2.2.2
 trafilatura==0.3.1
 urllib3==1.25.8
 Werkzeug==0.16.1
-zipp==3.0.0
+zipp==3.1.0

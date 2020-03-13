@@ -46,6 +46,6 @@ class MediumCrawler(BaseCrawler):
         return True
     
     def extract_content(self):
-        article = self.soup.find('article')
-        if article and self.valid_body:
+        article = self.parsed_lxml.find('.//article')
+        if article is not None and self.valid_body:
             self.has_content = True

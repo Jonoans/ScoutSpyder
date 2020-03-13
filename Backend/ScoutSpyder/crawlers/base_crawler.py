@@ -1,8 +1,8 @@
 from ScoutSpyder.models import *
 from ScoutSpyder.utils.logging import *
-from bs4 import BeautifulSoup
 from copy import deepcopy
 from mongoengine.errors import NotUniqueError
+from lxml import html
 from newspaper import Article
 from newspaper.configuration import Configuration
 from urllib.parse import urljoin, urlparse
@@ -91,7 +91,7 @@ class BaseCrawler:
             self.valid_body = True
             self.valid_url = True
             self.np_article = self.__init_article()
-            self.soup = self.__init_soup()
+            self.parsed_lxml = self.__init_lxml()
         else:
             self.crawl_id = None
             self.url, self.decomposed_urls = self.__init_url()
@@ -152,9 +152,9 @@ class BaseCrawler:
         article.set_html(self.html)
         return article
     
-    def __init_soup(self):
-        soup = BeautifulSoup(self.html, 'lxml')
-        return soup
+    def __init_lxml(self):
+        parsed_lxml = html.fromstring(self.html)
+        return parsed_lxml
     
     def __main_content_extraction(self):
         try:
@@ -215,7 +215,7 @@ class BaseCrawler:
     
     def find_links(self):
         """Extract links from <a> tags within HTML of page"""
-        elems = self.soup.find_all('a')
+        elems = self.parsed_lxml.findall('.//a')
         for elem in elems:
             link = elem.get('href')
             if link:

@@ -124,8 +124,8 @@ def add_queued_links(crawler):
         queued_link = prepare_queued_link(crawler, link)
         save_queued_link(queued_link)
 
-def start_crawler(master_browser=initialise_remote_browser,
-    child_browser=initialise_remote_browser):
+def start_crawler(master_browser=initialise_master_browser,
+    child_browser=initialise_child_browser):
     global ARGS
     ######################################################
     # Attaining arguments and configurations for crawler #
