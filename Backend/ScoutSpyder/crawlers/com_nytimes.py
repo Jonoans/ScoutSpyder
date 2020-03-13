@@ -28,8 +28,8 @@ class NewYorkTimesCrawler(BaseCrawler):
                 figures = article.findall('.//figure')
                 for figure in figures:
                     figure.getparent().remove(figure)
-                article_content = article.findall('.//div[class="article-paragraph"]')
-                article_content = [content.text.strip() for content in article_content if content.text.strip()]
+                article_content = article.findall('.//div[@class="article-paragraph"]')
+                article_content = [content.text.strip() for content in article_content if content.text and content.text.strip()]
                 article_content = '\n\n'.join(article_content)
                 if not len(article_content) <= 50: # Length enforcement
                     self.text = article_content
