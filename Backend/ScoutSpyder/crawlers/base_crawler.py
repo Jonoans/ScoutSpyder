@@ -113,6 +113,51 @@ class BaseCrawler:
         """Developer-implemented menthod for refinement to content extraction algorithm"""
         raise NotImplementedError(f'extract_content not implemented for {__name__}')
 
+    def prepare_db_entries(self):
+        """
+        Prepare `mongoengine.Document` object to be inserted by `insert_db_entries`.
+
+        Developer may choose to override in child classes.
+        """
+        crawled_doc = CrawledDocument()
+        crawled_doc.crawl_id = self.crawl_id
+        crawled_doc.fqdn = self.fqdn
+        crawled_doc.html = self.html
+        crawled_doc.url = self.url
+        if self.has_content:
+            crawled_doc.authors = self.authors
+            crawled_doc.title = self.title
+            crawled_doc.text = self.text
+        if self.has_date:
+            crawled_doc.publish_date = self.publish_date
+        return crawled_doc
+    
+    def insert_db_entries(self, db_entry):
+        """
+        Inserts previously prepared `mongoengine.Document` object
+
+        Developer may choose to override in child classes
+        """
+        try:
+            db_entry.save()
+            LOGGER.info(f'Scrapped: {self.url}')
+        except NotUniqueError:
+            pass
+        except:
+            LOGGER.exception('')
+
+    def scrap(self):
+        """Scrap page and process content"""
+        self.__extract_content()
+        if self.depth < self.depth_limit:
+            self.find_links()
+            self.generate_children()
+    
+    def post_scrap(self):
+        """Actions to be completed after scrapping content"""
+        db_entry = self.prepare_db_entries()
+        self.insert_db_entries(db_entry)
+
     def __extract_fqdn(self, url):
         """Shorthand method for fqdn extraction"""
         return tldextract.extract(url).fqdn
@@ -250,10 +295,3 @@ class BaseCrawler:
                 continue
             queued_link = self.prepare_queued_link(link, depth)
             self.save_queued_link(queued_link)
-
-    def scrap(self):
-        """Scrap page and process content"""
-        self.__extract_content()
-        if self.depth < self.depth_limit:
-            self.find_links()
-            self.generate_children()

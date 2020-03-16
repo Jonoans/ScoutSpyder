@@ -21,27 +21,6 @@ class Extractor(Process):
         Crawler = self.fqdn_metadata[downloaded_doc.fqdn]['class']
         return Crawler(downloaded_doc)
     
-    def prepare_crawled_doc(self, crawler):
-        crawled_doc = CrawledDocument()
-        crawled_doc.crawl_id = crawler.crawl_id
-        crawled_doc.fqdn = crawler.fqdn
-        crawled_doc.html = crawler.html
-        crawled_doc.url = crawler.url
-        if crawler.has_content:
-            crawled_doc.authors = crawler.authors
-            crawled_doc.title = crawler.title
-            crawled_doc.text = crawler.text
-        if crawler.has_date:
-            crawled_doc.publish_date = crawler.publish_date
-        return crawled_doc
-    
-    def save_crawled_doc(self, crawled_doc):
-        try:
-            crawled_doc.save()
-        except NotUniqueError:
-            return False
-        return True
-    
     def main(self):
         fqdns = self.fqdn_metadata.keys()
         while not self.terminate_event.is_set():
@@ -58,11 +37,9 @@ class Extractor(Process):
                 
                 crawler = self.init_crawler(downloaded_doc)
                 crawler.scrap()
+                crawler.post_scrap()
                 LOGGER.info(f'Processed: {crawler.url}')
-                crawled_doc = self.prepare_crawled_doc(crawler)
-                if self.save_crawled_doc(crawled_doc):
-                    LOGGER.info(f'Scrapped: {crawled_doc.url}')
-                del crawler, crawled_doc
+                del crawler, downloaded_doc
     
     def run(self):
         patch_autoproxy()
