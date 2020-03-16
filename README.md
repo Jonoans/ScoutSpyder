@@ -219,6 +219,11 @@ The following are optional instance methods that may be considered during implem
 
    By default, this method returns `None` indicating that authentication does not need to be considered for the said crawler.
 
+2. `post_scrap(self)`  
+   This method defines the actions or hooks to be run after scrapping is completed and the crawler objects are populated with content.
+   
+   By default, it runs the default `prepare_db_entries` and `insert_db_entries` instance methods. Both of the aforementioned methods may be overriden.
+
 **Credits**  
 The automated content extraction relies on the following Python libraries.
 1. Newspaper3k
