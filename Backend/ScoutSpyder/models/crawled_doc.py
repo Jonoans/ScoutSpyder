@@ -1,5 +1,6 @@
 from mongoengine import Document, DateTimeField, IntField, ListField, StringField
 from datetime import datetime
+import pytz
 
 class CrawledDocument(Document):
     meta = {
@@ -15,7 +16,7 @@ class CrawledDocument(Document):
     }
 
     crawl_id = StringField(required=True)
-    timestamp = DateTimeField(default=datetime.utcnow)
+    timestamp = DateTimeField(required=True)
     fqdn = StringField(required=True)
     html = StringField(required=True)
     url = StringField(required=True)
@@ -23,3 +24,8 @@ class CrawledDocument(Document):
     title = StringField()
     text = StringField()
     publish_date = DateTimeField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.pk:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())

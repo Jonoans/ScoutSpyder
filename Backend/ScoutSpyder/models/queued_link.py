@@ -1,5 +1,6 @@
 from mongoengine import Document, DateTimeField, IntField, StringField
 from datetime import datetime
+import pytz
 
 class QueuedLink(Document):
     meta = {
@@ -16,8 +17,13 @@ class QueuedLink(Document):
     }
 
     crawl_id = StringField(required=True)
-    timestamp = DateTimeField(default=datetime.utcnow)
+    timestamp = DateTimeField(required=True)
     fqdn = StringField(required=True)
     url = StringField(required=True)
     depth = IntField(required=True)
     depth_limit = IntField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.pk:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())
