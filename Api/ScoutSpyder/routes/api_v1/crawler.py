@@ -1,4 +1,3 @@
-from ..shared import fields as custom_fields
 from flask import request, session
 from flask_restx import fields, Namespace, Resource
 from flask_restx.errors import abort
