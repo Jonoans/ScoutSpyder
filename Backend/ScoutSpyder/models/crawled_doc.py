@@ -9,7 +9,6 @@ class CrawledDocument(Document):
         'index_background': True,
         'indexes': [
             {'fields': ['fqdn', 'html'], 'unique': True},
-            {'fields': ['fqdn', 'text'], 'unique': True},
             {'fields': ['url'], 'unique': True},
             {'fields': ['timestamp']},
             {'fields': ['-timestamp']}
