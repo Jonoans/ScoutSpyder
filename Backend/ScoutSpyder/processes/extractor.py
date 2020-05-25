@@ -34,11 +34,15 @@ class Extractor(Process):
                     if not downloaded_doc:
                         continue
                     downloaded_doc.delete()
-                
-                crawler = self.init_crawler(downloaded_doc)
-                crawler.scrap()
-                crawler.post_scrap()
-                LOGGER.info(f'Processed: {crawler.url}')
+
+                crawler = None
+                try:
+                    crawler = self.init_crawler(downloaded_doc)
+                    crawler.scrap()
+                    crawler.post_scrap()
+                    LOGGER.info(f'Processed: {crawler.url}')
+                except Exception as e:
+                    LOGGER.error(f'Error: {downloaded_doc.url}')
                 del crawler, downloaded_doc
     
     def run(self):
