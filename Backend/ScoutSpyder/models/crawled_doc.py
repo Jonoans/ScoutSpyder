@@ -20,6 +20,7 @@ class CrawledDocument(Document):
     fqdn = StringField(required=True)
     html = StringField(required=True)
     url = StringField(required=True)
+    processed = StringField(required=True)
     authors = ListField(StringField())
     title = StringField()
     text = StringField()
