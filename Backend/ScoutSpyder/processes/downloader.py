@@ -99,7 +99,8 @@ class Downloader(Process):
                     downloaded_doc = self.prepare_downloaded_doc(queued_link)
                     if self.save_downloaded_doc(downloaded_doc):
                         LOGGER.debug(f'Downloaded: {downloaded_doc.url}')
-                del queued_link, robots, downloaded_doc
+                    del downloaded_doc
+                del queued_link, robots
     
     def clean_up(self):
         try:
