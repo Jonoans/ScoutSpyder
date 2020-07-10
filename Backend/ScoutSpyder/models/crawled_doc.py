@@ -30,3 +30,4 @@ class CrawledDocument(Document):
         super().__init__(*args, **kwargs)
         if not self.pk:
             self.timestamp = pytz.utc.localize(datetime.utcnow())
+            self.processed = False
