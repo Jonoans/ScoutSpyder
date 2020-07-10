@@ -1,4 +1,4 @@
-from mongoengine import Document, DateTimeField, IntField, ListField, StringField
+from mongoengine import BooleanField, Document, DateTimeField, IntField, ListField, StringField
 from datetime import datetime
 import pytz
 
@@ -20,7 +20,7 @@ class CrawledDocument(Document):
     fqdn = StringField(required=True)
     html = StringField(required=True)
     url = StringField(required=True)
-    processed = StringField(required=True)
+    processed = BooleanField(required=True)
     authors = ListField(StringField())
     title = StringField()
     text = StringField()
