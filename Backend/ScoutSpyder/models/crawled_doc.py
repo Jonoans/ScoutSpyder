@@ -8,7 +8,13 @@ class CrawledDocument(Document):
         'collection': 'crawledDocument',
         'index_background': True,
         'indexes': [
-            {'fields': ['fqdn', 'html'], 'unique': True},
+            {
+                'fields': ['fqdn', 'text'],
+                'unique': True,
+                'partialFilterExpression': {
+                    'text': {'$type': 'string'}
+                }
+            },
             {'fields': ['url'], 'unique': True},
             {'fields': ['timestamp']},
             {'fields': ['-timestamp']}
