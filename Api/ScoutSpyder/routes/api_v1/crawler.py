@@ -15,8 +15,8 @@ class EnvironmentVariable(BaseModel):
 
 class ManageParameters(BaseModel):
     duration: float
-    environments: Optional[List[EnvironmentVariable]]
-    activated_crawlers: Optional[List[str]]
+    environments: Optional[List[EnvironmentVariable]] = []
+    activated_crawlers: Optional[List[str]] = []
 
 @app.post('/manage')
 def manage(body: ManageParameters):
