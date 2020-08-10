@@ -9,4 +9,4 @@ RUN rm -rf .git .gitignore Dockerfile requirements.txt update-container.sh docke
 USER scoutspyder
 WORKDIR /opt/scoutspyder/Backend
 EXPOSE 8000
-CMD ["gunicorn", "--chdir", "../Api", "-w", "2", "-b", "0.0.0.0:8000", "ScoutSpyder:app"]
+CMD ["gunicorn", "--app-dir", "../Api", "--workers", "2", "--host", "0.0.0.0", "--port", "8000", "ScoutSpyder:app"]
