@@ -1,3 +1,6 @@
-from .api_v1 import blueprint as api_v1
+from .api_v1 import app as api_v1
+from fastapi import FastAPI
 
-__all__ = ['api_v1']
+app = FastAPI()
+
+app.mount('/api/v1', api_v1)
