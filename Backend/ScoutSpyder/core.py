@@ -250,6 +250,12 @@ def start_crawler(master_browser=initialise_remote_browser,
     ##########################################
     # Give processes time to finish
     sleep(15)
+    
+    # Clean up database
+    db_conn_init()
+    DownloadedDocument.objects(crawl_id=crawl_id.hex).delete()
+    QueuedLink.objects(crawl_id=crawl_id.hex).delete()
+    db_conn_kill()
 
     # Forcefully terminate if required
     forceful_terminations = 0
