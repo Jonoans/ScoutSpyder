@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from os import urandom
@@ -7,7 +7,7 @@ from uuid import UUID
 import os
 import subprocess
 
-app = FastAPI()
+app = APIRouter()
 
 class EnvironmentVariable(BaseModel):
     name: str
@@ -16,7 +16,7 @@ class EnvironmentVariable(BaseModel):
 class ManageParameters(BaseModel):
     duration: float
     environments: Optional[List[EnvironmentVariable]] = []
-    activated_crawlers: Optional[List[str]] = []
+    activatedCrawlers: Optional[List[str]] = []
 
 @app.post('/manage')
 def manage(body: ManageParameters):

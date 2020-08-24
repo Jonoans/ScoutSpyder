@@ -1,6 +1,6 @@
-from .crawler import app as crawlerApi
+from .crawler import app as crawler
 from fastapi import FastAPI
 
 app = FastAPI()
 
-app.mount('/crawler', crawlerApi)
+app.include_router(crawler, prefix='/crawler')
