@@ -22,6 +22,10 @@ class ChannelNewsAsiaCrawler(BaseCrawler):
 
     def __init__(self, downloaded_doc=None):
         super().__init__(downloaded_doc)
+
+        self.blacklist_regex = [
+            'http[s]?://.*/video-on-demand/.*'
+        ]
     
     def extract_content(self):
         if self.valid_url:
