@@ -1,3 +1,4 @@
+from .com_channelnewsasia import ChannelNewsAsiaCrawler
 from .com_medium import MediumCrawler
 from .com_nytimes import NewYorkTimesCrawler
 from .com_pastebin import PastebinCrawler
@@ -7,6 +8,7 @@ from .io_polyswarm_blog import PolyswarmBlogCrawler
 __all__ = ['EXPORTED_CRAWLERS']
 
 ENABLED_CRAWLERS = [
+    ChannelNewsAsiaCrawler,
     MediumCrawler,
     NewYorkTimesCrawler,
     PastebinCrawler,
