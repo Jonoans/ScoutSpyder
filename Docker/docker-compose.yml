@@ -3,7 +3,9 @@ services:
   scoutspyder:
     restart: always
     container_name: 'crawler-api'
-    build: .
+    build:
+      context: ../
+      dockerfile: ./Docker/Dockerfile
     ports:
       - '8000:8000'
   selenium:
@@ -12,3 +14,7 @@ services:
     image: 'selenium/standalone-chrome'
     volumes:
       - /dev/shm:/dev/shm
+networks:
+  default:
+    external:
+      name: scoutspyder
