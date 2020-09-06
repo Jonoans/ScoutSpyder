@@ -12,7 +12,3 @@ services:
     image: 'selenium/standalone-chrome'
     volumes:
       - /dev/shm:/dev/shm
-  redis:
-    restart: always
-    container_name: 'crawler-redis'
-    image: 'redis'
