@@ -5,9 +5,6 @@ services:
     container_name: 'crawler-api'
     build:
       context: ../
-      dockerfile: ./Docker/Dockerfile
-    ports:
-      - '8000:8000'
   selenium:
     restart: always
     container_name: 'crawler-selenium'

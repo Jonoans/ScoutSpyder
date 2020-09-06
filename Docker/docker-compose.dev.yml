@@ -1,0 +1,11 @@
+version: '3'
+services:
+  scoutspyder:
+    build:
+      dockerfile: ./Docker/Dockerfile.dev
+    ports:
+      - '8000:8000'
+networks:
+  default:
+    external:
+      name: scoutspyder
