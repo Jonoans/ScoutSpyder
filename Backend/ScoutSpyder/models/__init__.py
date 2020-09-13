@@ -17,12 +17,10 @@ def db_conn_init():
     name = config['DATABASE']['Name']
     host = config['DATABASE']['Host']
     port = int(config['DATABASE']['Port'])
-    username = config['DATABASE'].get('username')
-    if username:
-        username = username.strip() if username.strip() else None
-    password = config['DATABASE'].get('password')
-    if password:
-        password = password.strip() if username and password.strip() else None
+    username = config['DATABASE'].get('Username')
+    username = username.strip() if username else None
+    password = config['DATABASE'].get('Password')
+    password = password.strip() if password else None
     tls = config['DATABASE'].getboolean('TlsEnabled', fallback=False)
     tls_ca_file = config['DATABASE'].get('TlsCaCertificate') if tls else None
 
@@ -31,8 +29,8 @@ def db_conn_init():
         'name': name,
         'host': host,
         'port': port,
-        'username': username,
-        'password': password,
+        'username': username if username and password else None,
+        'password': password if username and password else None,
         'tls': tls,
         'tlsCAFile': tls_ca_file
     }
