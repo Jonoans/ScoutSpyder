@@ -1,12 +1,12 @@
 version: '3'
 services:
   scoutspyder:
-    restart: always
+    restart: unless-stopped
     container_name: 'crawler-api'
     build:
       context: ../
   selenium:
-    restart: always
+    restart: unless-stopped
     container_name: 'crawler-selenium'
     image: 'selenium/standalone-chrome'
     volumes:
