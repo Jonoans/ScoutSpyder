@@ -5,4 +5,4 @@ docker network inspect scoutspyder >/dev/null 2>&1 || \
     --subnet 172.16.0.0/16 \
     --gateway 172.16.0.1 \
     scoutspyder
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d $1
