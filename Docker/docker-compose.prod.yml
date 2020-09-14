@@ -1,6 +1,6 @@
 version: '3'
 services:
-  scoutspyder:
+  scoutspyder-crawler:
     build:
       dockerfile: ./Docker/Dockerfile.prod
 networks:

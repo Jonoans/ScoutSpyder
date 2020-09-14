@@ -1,8 +1,8 @@
 version: '3'
 services:
-  scoutspyder:
+  scoutspyder-crawler:
     restart: unless-stopped
-    container_name: 'crawler-api'
+    container_name: 'crawler'
     build:
       context: ../
   selenium:
