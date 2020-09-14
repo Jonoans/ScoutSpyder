@@ -2,7 +2,6 @@ from ScoutSpyder.rabbitmq import *
 from ScoutSpyder.utils.logging import initialise_logging
 from os import environ
 import json
-import pika
 import signal
 import subprocess
 
