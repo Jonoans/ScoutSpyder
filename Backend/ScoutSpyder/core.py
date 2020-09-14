@@ -1,6 +1,7 @@
 from ScoutSpyder.crawlers import *
 from ScoutSpyder.models import *
 from ScoutSpyder.processes import *
+from ScoutSpyder.rabbitmq import persistent_pub, rabbitmq_conn_init, rabbitmq_conn_kill
 from ScoutSpyder.utils.configuration import *
 from ScoutSpyder.utils.logging import *
 from ScoutSpyder.utils.patcher import patch_autoproxy
@@ -12,6 +13,7 @@ from time import sleep
 from urllib.robotparser import RobotFileParser
 from uuid import UUID
 import argparse
+import json
 import tldextract
 
 __all__ = ['start_crawler']
@@ -271,3 +273,11 @@ def start_crawler(master_browser=initialise_remote_browser,
         process.join()
         process.close()
     LOGGER.info(f'{forceful_terminations} process(es) had to be forcefully terminated.')
+
+    complete_notification = {
+        'status': 'Success',
+        'crawl_id': crawl_id.hex
+    }
+    rabbitmq_conn_init()
+    persistent_pub('end_crawler', json.dumps(complete_notification))
+    rabbitmq_conn_kill()

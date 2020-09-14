@@ -14,7 +14,8 @@ LOGGER = initialise_logging(__name__)
 connection, channel, parameters = None, None, None
 MESSAGE_PROPS = pika.BasicProperties(delivery_mode=2)
 EXCHANGES = [
-    {'name': 'start_crawler', 'type': 'fanout'}
+    {'name': 'start_crawler', 'type': 'fanout'},
+    {'name': 'end_crawler', 'type': 'fanout'}
 ]
 QUEUES = [
     {'name': 'worker.start_crawler', 'exchange': 'start_crawler'}
