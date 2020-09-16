@@ -1,6 +1,7 @@
 from ScoutSpyder.utils.configuration import get_config
 from ScoutSpyder.utils.logging import initialise_logging
 import json
+import os
 import pika
 
 __all__ = [
@@ -53,10 +54,15 @@ def rabbitmq_conn_init():
     config = get_config()
     host = config['RABBITMQ']['Host']
     port = config['RABBITMQ']['Port']
-    username = config['RABBITMQ'].get('username')
+
+    username = config['RABBITMQ'].get('Username')
+    username = os.environ.get('RQ_USERNAME') or username
     username = username.strip() if username else None
-    password = config['RABBITMQ'].get('password')
+
+    password = config['RABBITMQ'].get('Password')
+    password = os.environ.get('RQ_PASSWORD') or password
     password = password.strip() if password else None
+
     credentials = pika.PlainCredentials(username, password) if username and password else None
     parameters = pika.ConnectionParameters(host, port, credentials=credentials)
     create_connection()

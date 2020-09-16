@@ -5,6 +5,11 @@ services:
     container_name: 'crawler'
     build:
       context: ../
+    environment:
+      - DB_USERNAME=scoutspyder
+      - DB_PASSWORD=XXXXXXXXXX
+      - RQ_USERNAME=scoutspyder
+      - RQ_PASSWORD=XXXXXXXXXX
   selenium:
     restart: unless-stopped
     container_name: 'crawler-selenium'
