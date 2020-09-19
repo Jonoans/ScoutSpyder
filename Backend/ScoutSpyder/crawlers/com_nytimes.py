@@ -1,5 +1,6 @@
 from ScoutSpyder.crawlers.base_crawler import *
 from ScoutSpyder.utils.logging import *
+from dateutil.parser import parse
 import tldextract
 
 LOGGER = initialise_logging(__name__)
@@ -38,3 +39,8 @@ class NewYorkTimesCrawler(BaseCrawler):
             if self.text and '\n\nAdvertisement' in self.text:
                 self.text = self.text.replace('\n\nAdvertisement', '')
                 self.has_content = True
+        
+        if self.has_content:
+            publish_date = self.parsed_lxml.find('.//time')
+            if publish_date:
+                self.publish_date = parse( publish_date.get('datetime') )
