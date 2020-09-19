@@ -42,5 +42,5 @@ class NewYorkTimesCrawler(BaseCrawler):
         
         if self.has_content:
             publish_date = self.parsed_lxml.find('.//time')
-            if publish_date:
+            if publish_date is not None:
                 self.publish_date = parse( publish_date.get('datetime') )

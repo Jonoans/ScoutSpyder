@@ -33,5 +33,5 @@ class WashingtonPostCrawler(BaseCrawler):
         
         if self.has_content:
             publish_date = self.parsed_lxml.find('.//meta[@property="article:published_time"]')
-            if publish_date:
+            if publish_date is not None:
                 self.publish_date = publish_date.get('content')
