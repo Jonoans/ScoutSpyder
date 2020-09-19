@@ -1,5 +1,6 @@
 from ScoutSpyder.crawlers.base_crawler import *
 from ScoutSpyder.utils.logging import initialise_logging
+from dateutil.parser import parse
 import re
 
 LOGGER = initialise_logging(__name__)
@@ -29,3 +30,8 @@ class WashingtonPostCrawler(BaseCrawler):
         if self.valid_url and self.valid_body:
             self.text = re.sub('Read more:.*', '', self.text)
             self.has_content = True
+        
+        if self.has_content:
+            publish_date = self.parsed_lxml.find('.//meta[@property="article:published_time"]')
+            if publish_date:
+                self.publish_date = publish_date.get('content')
