@@ -275,7 +275,7 @@ def start_crawler(master_browser=initialise_remote_browser,
     LOGGER.info(f'{forceful_terminations} process(es) had to be forcefully terminated.')
 
     complete_notification = {
-        'status': 'Success',
+        'status': 'OK',
         'crawl_id': crawl_id.hex
     }
     rabbitmq_conn_init()
