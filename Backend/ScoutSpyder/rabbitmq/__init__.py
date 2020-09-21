@@ -15,11 +15,10 @@ LOGGER = initialise_logging(__name__)
 connection, channel, parameters = None, None, None
 MESSAGE_PROPS = pika.BasicProperties(delivery_mode=2)
 EXCHANGES = [
-    {'name': 'start_crawler', 'type': 'fanout'},
-    {'name': 'end_crawler', 'type': 'fanout'}
+    {'name': 'crawler', 'type': 'topic'}
 ]
 QUEUES = [
-    {'name': 'worker.start_crawler', 'exchange': 'start_crawler'}
+    {'name': 'crawler_cmd_start', 'exchange': 'crawler', 'routing_key': 'crawler.cmd.start'}
 ]
 
 def start_consumption_loop(queue_func_mappings):
@@ -72,7 +71,7 @@ def rabbitmq_conn_init():
 
     for queue in QUEUES:
         channel.queue_declare(queue['name'], durable=True)
-        channel.queue_bind(queue['name'], queue['exchange'])
+        channel.queue_bind(queue['name'], queue['exchange'], queue.get('routing_key'))
 
 def rabbitmq_conn_kill():
     channel.stop_consuming()

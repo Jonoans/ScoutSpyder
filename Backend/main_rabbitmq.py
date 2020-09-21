@@ -35,7 +35,7 @@ def start_crawler(channel, method_frame, header_frame, body):
 
 def main():
     queue_to_func = [
-        {'queue': 'worker.start_crawler', 'function': start_crawler}
+        {'queue': 'crawler_cmd_start', 'function': start_crawler}
     ]
     LOGGER.info('Starting consumption loop...')
     start_consumption_loop(queue_to_func)
