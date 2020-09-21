@@ -279,5 +279,5 @@ def start_crawler(master_browser=initialise_remote_browser,
         'crawl_id': crawl_id.hex
     }
     rabbitmq_conn_init()
-    persistent_pub('end_crawler', json.dumps(complete_notification))
+    persistent_pub('crawler', json.dumps(complete_notification), 'crawler.event.end')
     rabbitmq_conn_kill()
