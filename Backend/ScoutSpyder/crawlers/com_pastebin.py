@@ -29,7 +29,7 @@ class PastebinCrawler(BaseCrawler):
             if re.fullmatch(path, url_path):
                 return
 
-        paste_code = self.parsed_lxml.find('.//textarea[@id="paste_code"]')
+        paste_code = self.parsed_lxml.find('.//textarea[not(@id)]')
         if paste_code is not None:
             self.text = paste_code.text
             self.has_content = True
