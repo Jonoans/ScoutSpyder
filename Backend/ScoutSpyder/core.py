@@ -13,7 +13,6 @@ from time import sleep
 from urllib.robotparser import RobotFileParser
 from uuid import UUID
 import argparse
-import json
 import tldextract
 
 __all__ = ['start_crawler']
@@ -279,5 +278,5 @@ def start_crawler(master_browser=initialise_remote_browser,
         'crawl_id': crawl_id.hex
     }
     rabbitmq_conn_init()
-    persistent_pub('crawler', json.dumps(complete_notification), 'crawler.event.end')
+    persistent_pub('crawler', complete_notification, 'crawler.event.end')
     rabbitmq_conn_kill()
