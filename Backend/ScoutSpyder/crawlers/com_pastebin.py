@@ -33,6 +33,5 @@ class PastebinCrawler(BaseCrawler):
         if paste_code is not None:
             if paste_code.get('id'):
                 return
-            print(paste_code.text)
             self.text = paste_code.text
             self.has_content = True
