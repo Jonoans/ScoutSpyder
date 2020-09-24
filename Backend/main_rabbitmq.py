@@ -33,9 +33,16 @@ def start_crawler(channel, method_frame, header_frame, body):
 
     channel.basic_ack(method_frame.delivery_tag)
 
+def start_single_crawler(channel, method_frame, header_frame, body):
+    body = json.loads(body)
+    article_id = body.get('article_id')
+    subprocess.Popen(f'python main_single.py -i {article_id}', start_new_session=True, env=environ, shell=True)
+    channel.basic_ack(method_frame.delivery_tag)
+
 def main():
     queue_to_func = [
-        {'queue': 'crawler_cmd_start', 'function': start_crawler}
+        {'queue': 'crawler_cmd_start', 'function': start_crawler},
+        {'queue': 'crawler_single_cmd_start', 'function': start_single_crawler}
     ]
     LOGGER.info('Starting consumption loop...')
     start_consumption_loop(queue_to_func)

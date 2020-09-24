@@ -15,10 +15,12 @@ LOGGER = initialise_logging(__name__)
 connection, channel, parameters = None, None, None
 MESSAGE_PROPS = pika.BasicProperties(delivery_mode=2)
 EXCHANGES = [
-    {'name': 'crawler', 'type': 'topic'}
+    {'name': 'crawler', 'type': 'topic'},
+    {'name': 'crawler_single', 'type': 'topic'}
 ]
 QUEUES = [
-    {'name': 'crawler_cmd_start', 'exchange': 'crawler', 'routing_key': 'crawler.cmd.start'}
+    {'name': 'crawler_cmd_start', 'exchange': 'crawler', 'routing_key': 'crawler.cmd.start'},
+    {'name': 'crawler_single_cmd_start', 'exchange': 'crawler_single', 'routing_key': 'crawler_single.cmd.start'}
 ]
 
 def start_consumption_loop(queue_func_mappings):
