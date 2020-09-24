@@ -1,4 +1,4 @@
-FROM python:slim
+FROM python
 RUN apt update && apt upgrade -y
 RUN useradd -M scoutspyder
 COPY --chown=scoutspyder:scoutspyder . /opt/scoutspyder
