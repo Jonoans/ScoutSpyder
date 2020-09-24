@@ -92,6 +92,7 @@ def start_crawler(child_browser=initialise_remote_browser):
     ###########################################################
     LOGGER.info('Reading arguments and configurations for single crawl...')
     ARGS = read_arguments()
+    LOGGER.info('Arguments and configurations initialised!')
 
     url = None
     if ARGS.id:

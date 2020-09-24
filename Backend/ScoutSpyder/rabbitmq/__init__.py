@@ -27,16 +27,12 @@ def start_consumption_loop(queue_func_mappings):
     while True:
         try:
             for mapping in queue_func_mappings:
-                def wrapped_function(*args, **kwargs):
-                    try: 
-                        mapping['function'](*args, **kwargs)
-                    except Exception as error:
-                        queue_name = mapping['queue']
-                        LOGGER.exception(f'Error in function for queue: {queue_name}')
-                channel.basic_consume(mapping['queue'], wrapped_function)
+                channel.basic_consume(mapping['queue'], mapping['function'])
             channel.start_consuming()
         except (pika.exceptions.ConnectionClosedByBroker, pika.exceptions.AMQPConnectionError):
             create_connection()
+        except:
+            LOGGER.exception('')
 
 def persistent_pub(exchange, message, routing_key=''):
     try:
