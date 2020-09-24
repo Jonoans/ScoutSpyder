@@ -85,7 +85,7 @@ def navigate(browser, url):
         return False
     return True
 
-def start_crawler(child_browser=initialise_child_browser):
+def start_crawler(child_browser=initialise_remote_browser):
     global ARGS
     ###########################################################
     # Attaining arguments and configurations for single crawl #
