@@ -10,6 +10,8 @@ services:
       - DB_PASSWORD=XXXXXXXXXX
       - RQ_USERNAME=scoutspyder
       - RQ_PASSWORD=XXXXXXXXXX
+    depends_on:
+      - selenium
   selenium:
     restart: unless-stopped
     container_name: 'crawler-selenium'
