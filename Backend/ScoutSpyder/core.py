@@ -5,6 +5,7 @@ from ScoutSpyder.rabbitmq import persistent_pub, rabbitmq_conn_init, rabbitmq_co
 from ScoutSpyder.utils.configuration import *
 from ScoutSpyder.utils.logging import *
 from ScoutSpyder.utils.patcher import patch_autoproxy
+from datetime import datetime
 from mongoengine.errors import NotUniqueError
 from multiprocessing import Manager
 from os import urandom
@@ -70,6 +71,10 @@ def initialise_child_browser(headless=True):
 
 def read_arguments():
     parser = argparse.ArgumentParser(description='ScoutSpyder Crawler')
+    parser.add_argument(
+        '-t', '--type', type=str, choices=['manual', 'scheduled'], default='manual',
+        help='Type of crawl, manual or scheduled'
+    )
     parser.add_argument(
         '-d', '--duration', type=float, required=True,
         help='Duration of crawl in minutes'
@@ -149,6 +154,14 @@ def start_crawler(master_browser=initialise_remote_browser,
         return
     LOGGER.info('Arguments and configurations initialised!')
 
+    TIME_STARTED = datetime.utcnow()
+    notification = {
+        'crawl_id': crawl_id.hex,
+        'type': ARGS.type
+    }
+    rabbitmq_conn_init()
+    persistent_pub('crawler', notification, 'crawler.event.start')
+    rabbitmq_conn_kill()
     #######################################################
     # Initialise sessions needed for authenticated crawls #
     #######################################################
@@ -273,10 +286,7 @@ def start_crawler(master_browser=initialise_remote_browser,
         process.close()
     LOGGER.info(f'{forceful_terminations} process(es) had to be forcefully terminated.')
 
-    complete_notification = {
-        'status': 'OK',
-        'crawl_id': crawl_id.hex
-    }
+    notification['elapsed'] = str(datetime.utcnow() - TIME_STARTED)
     rabbitmq_conn_init()
-    persistent_pub('crawler', complete_notification, 'crawler.event.end')
+    persistent_pub('crawler', notification, 'crawler.event.end')
     rabbitmq_conn_kill()

@@ -17,6 +17,7 @@ def setup_signal_handler():
 
 def start_crawler(channel, method_frame, header_frame, body):
     body = json.loads(body)
+    type_ = body.get('type') or 'manual'
     crawl_id = body.get('crawl_id')
     duration = body.get('duration')
     environments = body.get('environments')
@@ -27,9 +28,9 @@ def start_crawler(channel, method_frame, header_frame, body):
     
     if activated_crawlers:
         activated_crawlers = ', '.join(activated_crawlers)
-        subprocess.Popen(f'python main.py -id {crawl_id} -d {duration} -c "{activated_crawlers}"', start_new_session=True, env=env_vars, shell=True)
+        subprocess.Popen(f'python main.py -id {crawl_id} -d {duration} -t {type_} -c "{activated_crawlers}"', start_new_session=True, env=env_vars, shell=True)
     else:
-        subprocess.Popen(f'python main.py -id {crawl_id} -d {duration}', start_new_session=True, env=env_vars, shell=True)
+        subprocess.Popen(f'python main.py -id {crawl_id} -d {duration} -t {type_}', start_new_session=True, env=env_vars, shell=True)
 
     channel.basic_ack(method_frame.delivery_tag)
 
