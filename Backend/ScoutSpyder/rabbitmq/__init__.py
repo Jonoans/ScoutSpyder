@@ -31,6 +31,8 @@ def start_consumption_loop(queue_func_mappings):
             channel.start_consuming()
         except (pika.exceptions.ConnectionClosedByBroker, pika.exceptions.AMQPConnectionError):
             create_connection()
+        except pika.exceptions.ChannelWrongStateError:
+            break
         except:
             LOGGER.exception('')
 
