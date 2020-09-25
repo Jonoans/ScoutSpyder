@@ -37,6 +37,9 @@ def start_consumption_loop(queue_func_mappings):
             LOGGER.exception('')
 
 def persistent_pub(exchange, message, routing_key=''):
+    if not channel:
+        return # Run without rabbitmq, using API
+
     try:
         channel.basic_publish(exchange, routing_key, json.dumps(message), MESSAGE_PROPS)
     except (pika.exceptions.ConnectionClosedByBroker, pika.exceptions.AMQPConnectionError):
