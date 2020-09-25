@@ -5,7 +5,6 @@ from ScoutSpyder.rabbitmq import persistent_pub, rabbitmq_conn_init, rabbitmq_co
 from ScoutSpyder.utils.configuration import *
 from ScoutSpyder.utils.logging import *
 from ScoutSpyder.utils.patcher import patch_autoproxy
-from datetime import datetime
 from mongoengine.errors import NotUniqueError
 from multiprocessing import Manager
 from os import urandom
@@ -154,7 +153,6 @@ def start_crawler(master_browser=initialise_remote_browser,
         return
     LOGGER.info('Arguments and configurations initialised!')
 
-    TIME_STARTED = datetime.utcnow()
     notification = {
         'crawl_id': crawl_id.hex,
         'type': ARGS.type
@@ -286,7 +284,6 @@ def start_crawler(master_browser=initialise_remote_browser,
         process.close()
     LOGGER.info(f'{forceful_terminations} process(es) had to be forcefully terminated.')
 
-    notification['elapsed'] = str(datetime.utcnow() - TIME_STARTED)
     rabbitmq_conn_init()
     persistent_pub('crawler', notification, 'crawler.event.end')
     rabbitmq_conn_kill()
