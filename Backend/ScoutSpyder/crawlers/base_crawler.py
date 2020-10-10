@@ -6,6 +6,7 @@ from lxml import html
 from newspaper import Article
 from newspaper.configuration import Configuration
 from urllib.parse import urljoin, urlparse
+import json
 import re
 import tldextract
 import trafilatura
@@ -82,6 +83,7 @@ class BaseCrawler:
             self.title = None
             self.text = None
             self.publish_date = None
+            self.ld_json = {}
 
             # Flags
             self.has_content = False
@@ -226,11 +228,18 @@ class BaseCrawler:
         self.publish_date = self.np_article.publish_date
         if self.publish_date:
             self.has_date = True
+    
+    def __extract_ld_json(self):
+        """Extracts JSON Linked Data"""
+        ld_jsons = self.parsed_lxml.xpath('.//script[@type="application/ld+json"]')
+        for ld in ld_jsons:
+            self.ld_json.update( json.loads( ld.text_content()) )
 
     def __extract_content(self):
         """Content extraction pipeline"""
         self.__main_content_extraction()
         self.__extract_metadata()
+        self.__extract_ld_json()
         self.extract_content()
     
     def _complete_link(self, url):
