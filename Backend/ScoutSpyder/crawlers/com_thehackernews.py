@@ -16,9 +16,6 @@ class TheHackerNewsCrawler(BaseCrawler):
         self.blacklist_regex = [
             'http[s]?://.*/p/.*'
         ]
-
-    def insert_db_entries(self, db):
-        pass
     
     def pre_extract_actions(self):
         share_opts = self.parsed_lxml.xpath('.//div[contains(@class, "float-share") or contains(@class, "mobile-share")]')
