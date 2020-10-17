@@ -26,12 +26,27 @@ class WashingtonPostCrawler(BaseCrawler):
         for suffix in self.blacklist_suffix:
             self.blacklist_regex.append('http[s]?://(.*)\{}(.*)'.format(suffix))
     
+    def insert_db_entries(self, db_entry):
+        pass
+    
     def extract_content(self):
         if self.valid_url and self.valid_body:
             self.text = re.sub('Read more:.*', '', self.text)
             self.has_content = True
         
         if self.has_content:
-            publish_date = self.parsed_lxml.find('.//meta[@property="article:published_time"]')
+            publish_date = self.ld_json.get('datePublished')
             if publish_date is not None:
-                self.publish_date = publish_date.get('content')
+                self.publish_date = parse(publish_date)
+            
+            author = self.ld_json.get('author')
+            if author is not None:
+                if type(author) == list:
+                    self.authors = [x['name'] for x in author]
+                else:
+                    self.authors = [author['name']]
+
+            teaser_content = self.parsed_lxml.findall('.//div[@class="teaser-content"]//p')
+            if teaser_content:
+                teaser = [x.text_content().strip() for x in teaser_content]
+                self.text = '\n\n'.join(teaser + [self.text.strip()])

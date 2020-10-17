@@ -269,7 +269,6 @@ class BaseCrawler:
 
             children = scope.xpath('./*[@itemprop]')
             self.__process_w3microdata_children(children, self.w3cmicrodata)
-            print(self.w3cmicrodata)
 
     def pre_extract_actions(self):
         """Developer-implemented method to run functions before content extraction"""
