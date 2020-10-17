@@ -84,6 +84,7 @@ class BaseCrawler:
             self.text = None
             self.publish_date = None
             self.ld_json = {}
+            self.w3cmicrodata = {}
 
             # Flags
             self.has_content = False
@@ -234,12 +235,53 @@ class BaseCrawler:
         ld_jsons = self.parsed_lxml.xpath('.//script[@type="application/ld+json"]')
         for ld in ld_jsons:
             self.ld_json.update( json.loads( ld.text_content()) )
+    
+    def __process_w3microdata_children(self, children, dict_):
+        for child in children:
+            extracted = self.__extract_w3cmicrodata_item(child)
+
+            for key, val in extracted.items():
+                existing = dict_.get(key)
+                if existing is not None:
+                    if type(existing) != list:
+                        existing = list(existing)
+                    dict_[key] = existing.append(val)
+                    continue
+                dict_.update({key: val})
+
+    def __extract_w3cmicrodata_item(self, item):
+        if item.get('itemscope') is not None:
+            children = item.xpath('./*[@itemprop]')
+            child_items = {}
+            self.__process_w3microdata_children(children, child_items)
+            return {item.get('itemprop'): child_items}
+        
+        return {item.get('itemprop'): item.get('content') or item.get('href')}
+    
+    def __extract_w3cmicrodata(self):
+        itemscopes = self.parsed_lxml.xpath('.//*[@itemscope][not(ancestor::*[@itemscope])]')
+        if len(itemscopes) == 0:
+            return
+        
+        for scope in itemscopes:
+            if not 'schema.org' in scope.get('itemtype'):
+                continue
+
+            children = scope.xpath('./*[@itemprop]')
+            self.__process_w3microdata_children(children, self.w3cmicrodata)
+            print(self.w3cmicrodata)
+
+    def pre_extact_actions(self):
+        """Developer-implemented method to run functions before content extraction"""
+        pass
 
     def __extract_content(self):
         """Content extraction pipeline"""
+        self.pre_extact_actions()
         self.__main_content_extraction()
         self.__extract_metadata()
         self.__extract_ld_json()
+        self.__extract_w3cmicrodata()
         self.extract_content()
     
     def _complete_link(self, url):
