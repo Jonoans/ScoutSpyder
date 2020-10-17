@@ -271,13 +271,13 @@ class BaseCrawler:
             self.__process_w3microdata_children(children, self.w3cmicrodata)
             print(self.w3cmicrodata)
 
-    def pre_extact_actions(self):
+    def pre_extract_actions(self):
         """Developer-implemented method to run functions before content extraction"""
         pass
 
     def __extract_content(self):
         """Content extraction pipeline"""
-        self.pre_extact_actions()
+        self.pre_extract_actions()
         self.__main_content_extraction()
         self.__extract_metadata()
         self.__extract_ld_json()

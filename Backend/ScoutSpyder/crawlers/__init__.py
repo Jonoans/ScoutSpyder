@@ -3,6 +3,7 @@ from .com_darkreading import DarkReadingCrawler
 from .com_medium import MediumCrawler
 from .com_nytimes import NewYorkTimesCrawler
 from .com_pastebin import PastebinCrawler
+from .com_thehackernews import TheHackerNewsCrawler
 from .com_washingtonpost import WashingtonPostCrawler
 from .io_polyswarm_blog import PolyswarmBlogCrawler
 
@@ -14,6 +15,7 @@ ENABLED_CRAWLERS = [
     MediumCrawler,
     NewYorkTimesCrawler,
     PastebinCrawler,
+    TheHackerNewsCrawler,
     WashingtonPostCrawler,
     PolyswarmBlogCrawler
 ]
