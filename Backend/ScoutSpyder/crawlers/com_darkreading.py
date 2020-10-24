@@ -32,17 +32,26 @@ class DarkReadingCrawler(BaseCrawler):
             for x in captions:
                 x.getparent().remove(x)
 
+            # Remove related content table
+            tables = article_body.xpath('.//table')
+            for table in tables:
+                if 'Related Content:' in table.text_content():
+                    table.getparent().remove(table)
+
             # Extract body text
-            texts = article_body.xpath('./*[self::p or self::span]')
+            texts = article_body.xpath('.//*[self::p or self::span or self::li]')
             for text in texts:
                 for br in text.xpath('.//br'):
                     br.tail = '\n' + br.tail if br.tail else '\n'
             self.text = '\n'.join(x.text_content() for x in texts if x.text_content().strip())
             index = 0
             for index, line in enumerate(self.text.splitlines()):
-                if re.match(r'.*(Recommended Reading:|Related Content:|View Full Bio|Comment.*\|).*', line):
+                if re.match(r'.*(Recommended Reading:|View Full Bio|Comment.*\|).*', line):
                     break
             self.text = '\n'.join(self.text.splitlines()[:index])
+
+            with open('output.txt', 'a', encoding='utf-8') as file:
+                file.write(f'URL: {self.url}\nTitle: {self.title}\n\n{self.text}\n\n' + '=' * 20 + '\n\n')
 
             # Extract author
             self.authors = []
