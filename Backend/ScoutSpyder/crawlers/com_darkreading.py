@@ -37,6 +37,14 @@ class DarkReadingCrawler(BaseCrawler):
             for table in tables:
                 if 'Related Content:' in table.text_content():
                     table.getparent().remove(table)
+            
+            # Remove teads inread ads
+            ads = article_body.xpath('.//div[contains(@class, "teads-inread")]')            
+
+            # Remove native app ad
+            ads = article_body.xpath('.//div[contains(@class, "nativeappad-content")]')
+            for ad in ads:
+                ad.getparent().remove(ad)
 
             # Extract body text
             texts = article_body.xpath('.//*[self::p or self::span or self::li]')
