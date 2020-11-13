@@ -22,7 +22,7 @@ class CrawledDocument(Document):
         ]
     }
 
-    uuid = StringField(required=True)
+    uuid = StringField(required=True, unique=True)
     crawl_id = StringField(required=True)
     timestamp = DateTimeField()
     fqdn = StringField(required=True)
