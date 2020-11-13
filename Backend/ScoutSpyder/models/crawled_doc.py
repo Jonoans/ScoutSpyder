@@ -1,5 +1,6 @@
 from mongoengine import BooleanField, Document, DateTimeField, IntField, ListField, StringField
 from datetime import datetime
+from uuid import uuid4
 import pytz
 
 class CrawledDocument(Document):
@@ -21,8 +22,9 @@ class CrawledDocument(Document):
         ]
     }
 
+    uuid = StringField(required=True)
     crawl_id = StringField(required=True)
-    timestamp = DateTimeField(required=True)
+    timestamp = DateTimeField()
     fqdn = StringField(required=True)
     html = StringField(required=True)
     url = StringField(required=True)
@@ -35,5 +37,6 @@ class CrawledDocument(Document):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not self.pk:
+            self.uuid = uuid4().hex
             self.timestamp = pytz.utc.localize(datetime.utcnow())
             self.processed = False
