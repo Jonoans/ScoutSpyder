@@ -93,7 +93,7 @@ class BaseCrawler:
             # Other attributes
             self.valid_body = True
             self.valid_url = True
-            self.np_article = self.__init_article()
+            self.np_article = None
             self.parsed_lxml = self.__init_lxml()
         else:
             self.crawl_id = None
@@ -277,6 +277,7 @@ class BaseCrawler:
     def __extract_content(self):
         """Content extraction pipeline"""
         self.pre_extract_actions()
+        self.np_article = self.__init_article()
         self.__main_content_extraction()
         self.__extract_metadata()
         self.__extract_ld_json()
