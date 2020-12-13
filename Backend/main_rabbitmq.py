@@ -21,7 +21,7 @@ def start_crawler(channel, method_frame, header_frame, body):
     crawl_id = body.get('crawl_id')
     duration = body.get('duration')
     environments = body.get('environments') or []
-    activated_crawlers = body.get('activatedCrawlers')
+    activated_crawlers = body.get('activatedCrawlers') or []
     env_vars = environ.copy()
     for env in environments:
         env_vars.update( { env.get('name'): env.get('value') } )
