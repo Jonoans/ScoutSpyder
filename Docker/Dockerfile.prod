@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 RUN rm -rf .git .gitignore Docker requirements.txt
 USER scoutspyder
 WORKDIR /opt/scoutspyder/Backend
-CMD ["python", "main_rabbitmq.py"]
+CMD ["python", "main_rocket.py"]
