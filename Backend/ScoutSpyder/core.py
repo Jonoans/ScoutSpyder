@@ -1,7 +1,7 @@
 from ScoutSpyder.crawlers import *
 from ScoutSpyder.models import *
 from ScoutSpyder.processes import *
-from ScoutSpyder.rabbitmq import persistent_pub, rabbitmq_conn_init, rabbitmq_conn_kill
+from ScoutSpyder.rocket import oneway_publish
 from ScoutSpyder.utils.configuration import *
 from ScoutSpyder.utils.logging import *
 from ScoutSpyder.utils.patcher import patch_autoproxy
@@ -157,9 +157,7 @@ def start_crawler(master_browser=initialise_remote_browser,
         'crawl_id': crawl_id.hex,
         'type': ARGS.type
     }
-    rabbitmq_conn_init()
-    persistent_pub('crawler', notification, 'crawler.event.start')
-    rabbitmq_conn_kill()
+    oneway_publish('crawler', notification, 'crawler.event.start')
     #######################################################
     # Initialise sessions needed for authenticated crawls #
     #######################################################
@@ -284,6 +282,4 @@ def start_crawler(master_browser=initialise_remote_browser,
         process.close()
     LOGGER.info(f'{forceful_terminations} process(es) had to be forcefully terminated.')
 
-    rabbitmq_conn_init()
-    persistent_pub('crawler', notification, 'crawler.event.end')
-    rabbitmq_conn_kill()
+    oneway_publish('crawler', notification, 'crawler.event.end')

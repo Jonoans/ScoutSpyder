@@ -58,9 +58,6 @@ class DarkReadingCrawler(BaseCrawler):
                     break
             self.text = '\n'.join(self.text.splitlines()[:index])
 
-            with open('output.txt', 'a', encoding='utf-8') as file:
-                file.write(f'URL: {self.url}\nTitle: {self.title}\n\n{self.text}\n\n' + '=' * 20 + '\n\n')
-
             # Extract author
             self.authors = []
             author = self.ld_json.get('author')
