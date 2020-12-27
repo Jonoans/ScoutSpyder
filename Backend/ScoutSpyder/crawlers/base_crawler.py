@@ -264,7 +264,7 @@ class BaseCrawler:
             return
         
         for scope in itemscopes:
-            if not 'schema.org' in scope.get('itemtype'):
+            if not 'schema.org' in scope.get('itemtype', []):
                 continue
 
             children = scope.xpath('./*[@itemprop]')
