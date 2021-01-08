@@ -42,7 +42,7 @@ class Extractor(Process):
                     crawler.post_scrap()
                     LOGGER.info(f'Processed: {crawler.url}')
                 except Exception as e:
-                    LOGGER.exception(f'Error: {downloaded_doc.url}')
+                    LOGGER.exception(f'Error: {downloaded_doc.resolved_url}')
                 del crawler, downloaded_doc
     
     def run(self):
