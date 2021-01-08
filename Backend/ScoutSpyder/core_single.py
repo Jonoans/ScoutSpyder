@@ -149,6 +149,7 @@ def start_crawler(child_browser=initialise_remote_browser):
         downloaded_doc.crawl_id = uuid.hex
         downloaded_doc.fqdn = fqdn
         downloaded_doc.url = url
+        downloaded_doc.resolved_url = browser.current_url
         downloaded_doc.depth = 0
         downloaded_doc.depth_limit = 0
         crawler = found_crawler.__class__(downloaded_doc)
