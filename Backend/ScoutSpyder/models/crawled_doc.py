@@ -1,4 +1,4 @@
-from mongoengine import BooleanField, Document, DateTimeField, IntField, ListField, StringField
+from mongoengine import BooleanField, Document, DateTimeField, FloatField, IntField, ListField, StringField
 from datetime import datetime
 from uuid import uuid4
 import pytz
@@ -24,7 +24,7 @@ class CrawledDocument(Document):
 
     uuid = StringField(required=True, unique=True)
     crawl_id = StringField(required=True)
-    timestamp = DateTimeField()
+    timestamp = DateTimeField(required=True)
     fqdn = StringField(required=True)
     html = StringField(required=True)
     url = StringField(required=True)
@@ -33,6 +33,8 @@ class CrawledDocument(Document):
     title = StringField()
     text = StringField()
     publish_date = DateTimeField()
+    lang_code = StringField()
+    lang_probability = FloatField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
