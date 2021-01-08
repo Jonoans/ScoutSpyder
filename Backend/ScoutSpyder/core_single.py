@@ -96,12 +96,8 @@ def start_crawler(child_browser=initialise_remote_browser):
 
     url = None
     if ARGS.id:
-        # Validate input
-        if not (len(ARGS.id) == 24 and all(c in hexdigits for c in ARGS.id)):
-            LOGGER.info('Invalid ObjectId provided, terminating...')
-            return
         db_conn_init()
-        crawled_doc = CrawledDocument.objects(pk=ARGS.id).first()
+        crawled_doc = CrawledDocument.objects(uuid=ARGS.id).first()
         db_conn_kill()
         if not crawled_doc:
             LOGGER.info(f'Document {ARGS.id} not found, terminating...')
