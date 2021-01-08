@@ -67,7 +67,7 @@ class BaseCrawler:
             self.crawl_id = downloaded_doc.crawl_id
             self.fqdn = downloaded_doc.fqdn
             self.html = downloaded_doc.html
-            self.url = downloaded_doc.url
+            self.url = downloaded_doc.resolved_url
 
             # Depth crawl
             self.depth = downloaded_doc.depth

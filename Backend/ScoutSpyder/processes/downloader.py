@@ -57,6 +57,7 @@ class Downloader(Process):
         downloaded_doc.url = queued_link.url
         downloaded_doc.depth = queued_link.depth
         downloaded_doc.depth_limit = queued_link.depth_limit
+        downloaded_doc.resolved_url = self.browser.current_url
         return downloaded_doc
     
     def save_downloaded_doc(self, downloaded_doc):

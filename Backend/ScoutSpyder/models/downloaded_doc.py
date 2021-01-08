@@ -21,6 +21,7 @@ class DownloadedDocument(Document):
     fqdn = StringField(required=True)
     html = StringField(required=True)
     url = StringField(required=True)
+    resolved_url = StringField(required=True)
     depth = IntField(required=True)
     depth_limit = IntField(required=True)
 
