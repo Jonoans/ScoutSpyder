@@ -47,7 +47,7 @@ def start_single_crawler(message):
 # issues with have different callback functions
 def start_callback(message):
     tag = message.tags.decode()
-    if tag == 'crawler.cmd.start':
+    if tag == 'crawler.internal.cmd.start':
         return start_crawler(message)
     elif tag == 'crawler_single.cmd.start':
         return start_single_crawler(message)
@@ -57,7 +57,7 @@ def main():
     LOGGER.info('Starting worker process...')
 
     consumer = init_push_consumer('crawler')
-    consumer.subscribe('crawler', start_callback, 'crawler.cmd.start')
+    consumer.subscribe('crawler', start_callback, 'crawler.internal.cmd.start')
     consumer.subscribe('crawler_single', start_callback, 'crawler_single.cmd.start')
 
     LOGGER.info('Starting consumption loop...')
