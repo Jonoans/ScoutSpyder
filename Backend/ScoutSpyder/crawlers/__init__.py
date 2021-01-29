@@ -6,7 +6,6 @@ from .com_pastebin import PastebinCrawler
 from .com_thehackernews import TheHackerNewsCrawler
 from .com_threatpost import ThreatpostCrawler
 from .com_washingtonpost import WashingtonPostCrawler
-from .io_polyswarm_blog import PolyswarmBlogCrawler
 
 __all__ = ['EXPORTED_CRAWLERS']
 
@@ -18,8 +17,7 @@ ENABLED_CRAWLERS = [
     PastebinCrawler,
     TheHackerNewsCrawler,
     ThreatpostCrawler,
-    WashingtonPostCrawler,
-    PolyswarmBlogCrawler
+    WashingtonPostCrawler
 ]
 
 EXPORTED_CRAWLERS = {}
