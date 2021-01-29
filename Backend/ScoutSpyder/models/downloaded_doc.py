@@ -6,7 +6,6 @@ class DownloadedDocument(Document):
     meta = {
         'db_alias': 'global',
         'collection': 'downloadedDocument',
-        'index_background': True,
         'indexes': [
             {'fields': ['crawl_id', 'fqdn']},
             {'fields': ['crawl_id', 'url'], 'unique': True},
