@@ -234,7 +234,10 @@ class BaseCrawler:
         """Extracts JSON Linked Data"""
         ld_jsons = self.parsed_lxml.xpath('.//script[@type="application/ld+json"]')
         for ld in ld_jsons:
-            self.ld_json.update( json.loads( ld.text_content()) )
+            try:
+                self.ld_json.update( json.loads( ld.text_content()) )
+            except json.decoder.JSONDecodeError:
+                pass
     
     def __process_w3microdata_children(self, children, dict_):
         for child in children:
