@@ -9,13 +9,13 @@ class ChannelNewsAsiaCrawler(BaseCrawler):
     crawler_id = 'com.channelnewsasia'
     requests_per_sec = 1
     start_url = [
+        'https://www.channelnewsasia.com/',
         'https://www.channelnewsasia.com/news/singapore',
         'https://www.channelnewsasia.com/news/asia',
         'https://www.channelnewsasia.com/news/world',
         'https://www.channelnewsasia.com/news/commentary',
         'https://www.channelnewsasia.com/news/business',
         'https://www.channelnewsasia.com/news/cnainsider',
-        'https://www.channelnewsasia.com/news/topics/coronavirus-covid-19',
         'https://www.channelnewsasia.com/news/technology'
     ]
     robots_url = 'https://www.channelnewsasia.com/robots.txt'
