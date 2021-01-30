@@ -1,8 +1,8 @@
 FROM python
 RUN apt update && apt upgrade -y
-RUN wget https://github.com/apache/rocketmq-client-cpp/releases/download/2.0.0/rocketmq-client-cpp-2.0.0.amd64.deb \
-    && dpkg -i rocketmq-client-cpp-2.0.0.amd64.deb \
-    && rm -f rocketmq-client-cpp-2.0.0.amd64.deb
+RUN wget https://github.com/apache/rocketmq-client-cpp/releases/download/2.1.0/rocketmq-client-cpp-2.1.0.amd64.deb \
+    && dpkg -i rocketmq-client-cpp-2.1.0.amd64.deb \
+    && rm -f rocketmq-client-cpp-2.1.0.amd64.deb
 RUN useradd -m scoutspyder
 COPY --chown=scoutspyder:scoutspyder . /opt/scoutspyder
 WORKDIR /opt/scoutspyder
