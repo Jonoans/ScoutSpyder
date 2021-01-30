@@ -7,6 +7,7 @@ class CrawledDocument(Document):
     meta = {
         'db_alias': 'global',
         'collection': 'crawledDocument',
+        'index_background': True,
         'indexes': [
             {
                 'fields': ['fqdn', 'text'],
