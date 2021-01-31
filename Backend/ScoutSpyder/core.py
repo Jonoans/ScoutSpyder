@@ -5,6 +5,7 @@ from ScoutSpyder.rocket import oneway_publish
 from ScoutSpyder.utils.configuration import *
 from ScoutSpyder.utils.logging import *
 from ScoutSpyder.utils.patcher import patch_autoproxy
+from datetime import datetime, timedelta
 from mongoengine.errors import NotUniqueError
 from multiprocessing import Manager
 from os import urandom
@@ -219,20 +220,19 @@ def start_crawler(master_browser=initialise_remote_browser,
         
         # Synchronisation events
         start_event = manager.Event()
-        terminate_event = manager.Event()
+        terminate_time = datetime.now() + timedelta(seconds=ARGS.duration * 60)
 
         # Processes
         downloader_procs = []
         for _ in range(downloader_count):
-            downloader = Downloader(crawl_id, child_browser, terminate_event,
+            downloader = Downloader(crawl_id, child_browser, terminate_time,
                 cookies, fqdn_metadata, rate_limiters)
             downloader.start()
             downloader_procs.append(downloader)
         
         extractor_procs = []
         for _ in range(extractor_count):
-            extractor = Extractor(crawl_id, start_event,
-                terminate_event, fqdn_metadata)
+            extractor = Extractor(crawl_id, start_event, terminate_time, fqdn_metadata)
             extractor.start()
             extractor_procs.append(extractor)
         
@@ -249,8 +249,7 @@ def start_crawler(master_browser=initialise_remote_browser,
     ##########################################
     LOGGER.info(f'Crawl {crawl_id.hex} starting, come back in {ARGS.duration} minute(s)!')
     start_event.set()
-    sleep(ARGS.duration * 60)
-    terminate_event.set()
+    sleep( (terminate_time - datetime.now()).total_seconds() + 5 )
     LOGGER.info(f'Crawl {crawl_id.hex} completed! Cleaning up...')
 
     ##########################################

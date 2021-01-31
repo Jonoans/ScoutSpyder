@@ -2,29 +2,32 @@ from ScoutSpyder.crawlers import *
 from ScoutSpyder.models import *
 from ScoutSpyder.utils.logging import *
 from ScoutSpyder.utils.patcher import patch_autoproxy
+from datetime import datetime
 from mongoengine.errors import NotUniqueError
 from multiprocessing import Process
 
 LOGGER = initialise_logging(__name__)
 
 class Extractor(Process):
-    def __init__(self, crawl_id, start_event,
-        terminate_event, fqdn_metadata):
+    def __init__(self, crawl_id, start_event, terminate_time, fqdn_metadata):
         super().__init__()
         self.crawl_id = crawl_id.hex
         self.start_event = start_event
-        self.terminate_event = terminate_event
+        self.terminate_time = terminate_time
         self.fqdn_metadata = fqdn_metadata
     
     def init_crawler(self, downloaded_doc):
         Crawler = self.fqdn_metadata[downloaded_doc.fqdn]['class']
         return Crawler(downloaded_doc)
     
+    def timeup(self):
+        return self.terminate_time <= datetime.now()
+    
     def main(self):
         fqdns = self.fqdn_metadata.keys()
-        while not self.terminate_event.is_set():
+        while not self.timeup():
             for fqdn in fqdns:
-                if self.terminate_event.is_set():
+                if self.timeup():
                     break
 
                 downloaded_doc = DownloadedDocument \

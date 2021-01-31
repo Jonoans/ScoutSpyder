@@ -1,6 +1,7 @@
 from ScoutSpyder.models import *
 from ScoutSpyder.utils.logging import *
 from ScoutSpyder.utils.patcher import patch_autoproxy
+from datetime import datetime
 from mongoengine.errors import NotUniqueError
 from multiprocessing import Event, Process
 from selenium.common.exceptions import WebDriverException
@@ -8,12 +9,12 @@ from selenium.common.exceptions import WebDriverException
 LOGGER = initialise_logging(__name__)
 
 class Downloader(Process):
-    def __init__(self, crawl_id, init_browser, terminate_event,
+    def __init__(self, crawl_id, init_browser, terminate_time,
         cookies, fqdn_metadata, rate_limiters):
         super().__init__()
         self.crawl_id = crawl_id.hex
         self._init_browser = init_browser
-        self.terminate_event = terminate_event
+        self.terminate_time = terminate_time
         self.cookies = cookies
         self.fqdn_metadata = fqdn_metadata
         self.rate_limiters = rate_limiters
@@ -69,11 +70,14 @@ class Downloader(Process):
     def duplicate_found(self, url):
         return DownloadedDocument.objects(crawl_id=self.crawl_id, url=url).first()
     
+    def timeup(self):
+        return self.terminate_time <= datetime.now()
+    
     def main(self):
         fqdns = self.fqdn_metadata.keys()
-        while not self.terminate_event.is_set():
+        while not self.timeup():
             for fqdn in fqdns:
-                if self.terminate_event.is_set():
+                if self.timeup():
                     break
                 
                 queued_link = None
