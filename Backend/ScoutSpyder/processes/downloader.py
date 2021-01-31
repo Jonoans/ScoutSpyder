@@ -9,7 +9,7 @@ LOGGER = initialise_logging(__name__)
 
 class Downloader(Process):
     def __init__(self, crawl_id, init_browser, terminate_event,
-        cookies, fqdn_metadata, rate_limiters, query_lock):
+        cookies, fqdn_metadata, rate_limiters):
         super().__init__()
         self.crawl_id = crawl_id.hex
         self._init_browser = init_browser
@@ -17,7 +17,6 @@ class Downloader(Process):
         self.cookies = cookies
         self.fqdn_metadata = fqdn_metadata
         self.rate_limiters = rate_limiters
-        self.query_lock = query_lock
         self.browser_started = Event()
         self.browser = None
     
@@ -77,14 +76,15 @@ class Downloader(Process):
                 if self.terminate_event.is_set():
                     break
                 
-                with self.query_lock:
-                    queued_link = None
-                    if self.check_rate_limiter(fqdn):
-                        queued_link = QueuedLink.objects(crawl_id=self.crawl_id, fqdn=fqdn).first()
-                    if not queued_link:
-                        continue
-                    queued_link.delete()
-                    self.set_rate_limiter(fqdn)
+                queued_link = None
+                if self.check_rate_limiter(fqdn):
+                    queued_link = QueuedLink.objects(crawl_id=self.crawl_id, fqdn=fqdn).first()
+                if not queued_link:
+                    continue
+                deleted = QueuedLink.objects(pk=queued_link.pk).delete()
+                if deleted <= 0:
+                    continue
+                self.set_rate_limiter(fqdn)
                 
                 if self.duplicate_found(queued_link.url):
                     del queued_link
@@ -93,7 +93,7 @@ class Downloader(Process):
                 robots = self.fqdn_metadata[fqdn]['robots_txt']
                 if robots:
                     if not robots.can_fetch('Googlebot', queued_link.url):
-                        del queued_link, robots
+                        del deleted, queued_link, robots
                         continue
                 
                 if self.navigate(queued_link.url):
@@ -101,7 +101,7 @@ class Downloader(Process):
                     if self.save_downloaded_doc(downloaded_doc):
                         LOGGER.debug(f'Downloaded: {downloaded_doc.resolved_url}')
                     del downloaded_doc
-                del queued_link, robots
+                del deleted, queued_link, robots
     
     def clean_up(self):
         try:

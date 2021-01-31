@@ -220,21 +220,19 @@ def start_crawler(master_browser=initialise_remote_browser,
         # Synchronisation events
         start_event = manager.Event()
         terminate_event = manager.Event()
-        downloader_lock = manager.RLock()
-        extractor_lock = manager.RLock()
 
         # Processes
         downloader_procs = []
         for _ in range(downloader_count):
             downloader = Downloader(crawl_id, child_browser, terminate_event,
-                cookies, fqdn_metadata, rate_limiters, downloader_lock)
+                cookies, fqdn_metadata, rate_limiters)
             downloader.start()
             downloader_procs.append(downloader)
         
         extractor_procs = []
         for _ in range(extractor_count):
             extractor = Extractor(crawl_id, start_event,
-                terminate_event, fqdn_metadata, extractor_lock)
+                terminate_event, fqdn_metadata)
             extractor.start()
             extractor_procs.append(extractor)
         

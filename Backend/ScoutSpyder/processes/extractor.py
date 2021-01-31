@@ -9,13 +9,12 @@ LOGGER = initialise_logging(__name__)
 
 class Extractor(Process):
     def __init__(self, crawl_id, start_event,
-        terminate_event, fqdn_metadata, query_lock):
+        terminate_event, fqdn_metadata):
         super().__init__()
         self.crawl_id = crawl_id.hex
         self.start_event = start_event
         self.terminate_event = terminate_event
         self.fqdn_metadata = fqdn_metadata
-        self.query_lock = query_lock
     
     def init_crawler(self, downloaded_doc):
         Crawler = self.fqdn_metadata[downloaded_doc.fqdn]['class']
@@ -28,12 +27,13 @@ class Extractor(Process):
                 if self.terminate_event.is_set():
                     break
 
-                with self.query_lock:
-                    downloaded_doc = DownloadedDocument \
-                        .objects(crawl_id=self.crawl_id, fqdn=fqdn).first()
-                    if not downloaded_doc:
-                        continue
-                    downloaded_doc.delete()
+                downloaded_doc = DownloadedDocument \
+                    .objects(crawl_id=self.crawl_id, fqdn=fqdn).first()
+                if not downloaded_doc:
+                    continue
+                deleted = DownloadedDocument.objects(pk=downloaded_doc.pk).delete()
+                if deleted <= 0:
+                    continue
 
                 crawler = None
                 try:
@@ -43,7 +43,7 @@ class Extractor(Process):
                     LOGGER.info(f'Processed: {crawler.url}')
                 except Exception as e:
                     LOGGER.exception(f'Error: {downloaded_doc.resolved_url}')
-                del crawler, downloaded_doc
+                del crawler, deleted, downloaded_doc
     
     def run(self):
         patch_autoproxy()
